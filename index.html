@@ -1,0 +1,76 @@
+<html><head>
+<title>JS OTP Demo</title>
+<style>
+    body {
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+
+<body style="width: 45em;">
+
+<p id="secret">Secret: </p>
+<h2 id="code-1">TOTP code</h2>
+<p id="ticker">timer</p>
+<script src="jsOTP.min.js"></script>
+<script>
+$ = function(sel) {
+  return document.querySelector(sel);
+};
+
+function base32Encode(input) {
+    const base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    let binaryString = "";
+    
+    for (let i = 0; i < input.length; i++) {
+        binaryString += input.charCodeAt(i).toString(2).padStart(8, '0');
+    }
+
+    let base32 = "";
+    for (let i = 0; i < binaryString.length; i += 5) {
+        const chunk = binaryString.substr(i, 5).padEnd(5, '0');
+        const index = parseInt(chunk, 2);
+        base32 += base32Chars[index];
+    }
+
+    return base32;
+}
+
+const text = "qrkilit-555666";
+var secret = base32Encode(text);
+//console.log(secret);
+//alert(secret);
+
+//var secret = "OFZGW2LMNF2C2NJVGU3DMNQ"
+//$('#secret').innerText = "Secret: " + secret;
+
+var totp = new jsOTP.totp();
+var code = totp.getOtp(secret);
+var hotp = new jsOTP.hotp();
+var doge = hotp.getOtp(secret, 0);
+
+console.log(code);
+console.log(doge);
+
+var updateTicker = function(tick, el) {
+  el.innerText = tick;
+}
+var updateTotp = function(secret, el) {
+  el.innerText = totp.getOtp(secret);
+}
+
+updateTotp(secret, $('#code-1'));
+
+var timeLoop = function() {
+  var epoch = Math.round(new Date().getTime() / 1000.0);
+  var countDown = 30 - (epoch % 30);
+  updateTicker(countDown, $('#ticker'));
+  if (epoch % 30 == 0) updateTotp(secret, $('#code-1'));
+}
+
+setInterval(timeLoop, 1000);
+
+</script>
+
+</body></html>

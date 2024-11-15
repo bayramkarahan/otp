@@ -19,7 +19,7 @@ def get_hotp_token(secret, intervals_no):
 
 def get_totp_token(secret):
     #ensuring to give the same otp for 30 seconds
-    x =str(get_hotp_token(secret,intervals_no=int(time.time())//30))
+    x =str(get_hotp_token(secret,intervals_no=int(time.time())//60))
     #adding 0 in the beginning till OTP has 6 digits
     while len(x)!=6:
         x+='0'

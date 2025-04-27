@@ -37,13 +37,13 @@ function base32Encode(input) {
     return base32;
 }
 
-const text = "qrkilit-555666";
+const text = "qrkilit-0000001";
 var secret = base32Encode(text);
 //console.log(secret);
 //alert(secret);
 
 //var secret = "OFZGW2LMNF2C2NJVGU3DMNQ"
-//$('#secret').innerText = "Secret: " + secret;
+$('#secret').innerText = "Anahtar: " + secret;
 
 var totp = new jsOTP.totp();
 var code = totp.getOtp(secret);
